@@ -1,0 +1,1 @@
+# Qt-Temperature-Humidity-for-Pi
