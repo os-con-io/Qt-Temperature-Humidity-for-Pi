@@ -1,12 +1,12 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include<read.h>
+#include<QProcess>
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-qDebug()<<"test";
     plt_hum=new QwtPlot();
     plt_hum->setAxisScale(QwtPlot::xBottom,0.0,1024,50);
     plt_hum->setAxisScale(QwtPlot::yLeft,0,100,50);
@@ -19,7 +19,6 @@ qDebug()<<"test";
     curve_hum->setPen( QPen( Qt::yellow, 1.0 ) );
     curve_hum->setStyle( QwtPlotCurve::Lines );
     curve_hum->setRenderHint( QwtPlotCurve::RenderAntialiased );
-qDebug()<<"test";
     plt_temp=new QwtPlot();
     plt_temp->setAxisScale(QwtPlot::xBottom,0.0,1024,50);
     plt_temp->setAxisScale(QwtPlot::yLeft,0,50,50);
@@ -63,4 +62,17 @@ void MainWindow::updateScreen(){
     ui->tableWidget_2->setItem(rowCount_2,0,new QTableWidgetItem(QDateTime::currentDateTime().toString()));
     ui->tableWidget_2->setItem(rowCount_2,1,new QTableWidgetItem(QString::number(reading.temp,'f',2)));
     i++;
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    QDate date=ui->dateEdit->date();
+    QTime time=ui->timeEdit->time();
+    QProcess *p = new QProcess(this);
+    // Change system date and time "date -u MMDDhhmmYYYY.ss" in tha application the date is created dynamically
+    p->start("date -u 121711562012.00");
+    p->waitForFinished();
+    // Set the Hardware Clock to the current System Time.
+    p->start("hwclock -w");
+    p->waitForFinished();
 }
